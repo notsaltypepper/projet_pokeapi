@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 
 export default function ListePokemons() {
+	const [index, setIndex] = useState(0);
+	const [offset, setOffset] = useState(20);
+	const [image, setImage] = useState("");
 	const [pokemons, setPokemons] = useState([]);
 	const [url, setUrl] = useState({
 		current: "https://pokeapi.co/api/v2/pokemon",
 		next: null,
 		previous: null,
 	});
-	const [image, setImage] = useState("");
 
 	const next = () => {
 		const newUrl = {
@@ -16,6 +18,8 @@ export default function ListePokemons() {
 			next: null,
 		};
 		setUrl(newUrl);
+		setOffset(offset + 20);
+		// console.log(offset);
 	};
 
 	const previous = () => {
@@ -25,12 +29,13 @@ export default function ListePokemons() {
 			next: url.current,
 		};
 		setUrl(newUrl);
+		setOffset(offset - 20);
+		// console.log(offset);
 	};
 
 	useEffect(() => {
 		fetch(url.current)
 			.then(res => res.json())
-
 			.then(data => {
 				setPokemons(data.results);
 				setUrl({
@@ -44,13 +49,17 @@ export default function ListePokemons() {
 		// eslint-disable-next-line
 	}, [url.current]);
 
-	useEffect(() => {
-		fetch("https://pokeapi.co/api/v2/pokemon/2")
-			.then(res => res.json())
-			.then(data => {
-				setImage(data.sprites.front_default);
-			})
-			.catch(err => console.log(err));
+	useEffect(i => {
+		while (i <= offset) {
+			fetch("https://pokeapi.co/api/v2/pokemon/")
+				.then(res => res.json())
+				.then(data => {
+					setImage(data.sprites.front_default);
+				})
+				.catch(err => console.log(err));
+			i++;
+		}
+		console.log(offset);
 	});
 
 	return (
@@ -60,7 +69,9 @@ export default function ListePokemons() {
 				{pokemons.map((pokemon, i) => (
 					<li key={i}>
 						{pokemon.name}
-						{pokemon.id}
+						{"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+							i +
+							".png"}
 					</li>
 				))}
 			</ul>
