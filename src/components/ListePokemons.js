@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 
 export default function ListePokemons() {
-	const [index, setIndex] = useState(0);
 	const [offset, setOffset] = useState(20);
-	const [image, setImage] = useState("");
+	const [imageOffset, setImageOffset] = useState(1);
 	const [pokemons, setPokemons] = useState([]);
 	const [url, setUrl] = useState({
 		current: "https://pokeapi.co/api/v2/pokemon",
@@ -19,6 +18,7 @@ export default function ListePokemons() {
 		};
 		setUrl(newUrl);
 		setOffset(offset + 20);
+		setImageOffset(imageOffset + 20);
 		// console.log(offset);
 	};
 
@@ -30,6 +30,7 @@ export default function ListePokemons() {
 		};
 		setUrl(newUrl);
 		setOffset(offset - 20);
+		setImageOffset(imageOffset - 20);
 		// console.log(offset);
 	};
 
@@ -48,19 +49,18 @@ export default function ListePokemons() {
 			.catch(err => console.error(err));
 		// eslint-disable-next-line
 	}, [url.current]);
-
-	useEffect(i => {
-		while (i <= offset) {
-			fetch("https://pokeapi.co/api/v2/pokemon/")
-				.then(res => res.json())
-				.then(data => {
-					setImage(data.sprites.front_default);
-				})
-				.catch(err => console.log(err));
-			i++;
-		}
-		console.log(offset);
-	});
+	// useEffect(i => {
+	// 	while (i <= offset) {
+	// 		fetch("https://pokeapi.co/api/v2/pokemon/")
+	// 			.then(res => res.json())
+	// 			.then(data => {
+	// 				setImage(data.sprites.front_default);
+	// 			})
+	// 			.catch(err => console.log(err));
+	// 		i++;
+	// 	}
+	// 	console.log(offset);
+	// });
 
 	return (
 		<div>
@@ -69,15 +69,21 @@ export default function ListePokemons() {
 				{pokemons.map((pokemon, i) => (
 					<li key={i}>
 						{pokemon.name}
-						{"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
-							i +
-							".png"}
+						{imageOffset + i}
+						<img
+							src={
+								"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+								(imageOffset + i) +
+								".png"
+							}
+							alt=""
+						/>
 					</li>
 				))}
 			</ul>
 			{url.previous && <button onClick={previous}>Previous</button>}
 			{url.next && <button onClick={next}>Next</button>}
-			<img src={image} alt="" />
+			{/* <img src={image} alt="" /> */}
 		</div>
 	);
 }
