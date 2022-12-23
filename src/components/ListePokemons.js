@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 
 export default function ListePokemons() {
 	const [offset, setOffset] = useState(20);
-	const [imageOffset, setImageOffset] = useState(1);
+	const [pageId, setPageId] = useState(1);
+	const [id, setId] = useState(1);
 	const [pokemons, setPokemons] = useState([]);
+	const [type, setType] = useState([]);
 	const [url, setUrl] = useState({
-		current: "https://pokeapi.co/api/v2/pokemon",
+		current: "https://pokeapi.co/api/v2/pokemon/",
 		next: null,
 		previous: null,
 	});
@@ -18,8 +20,7 @@ export default function ListePokemons() {
 		};
 		setUrl(newUrl);
 		setOffset(offset + 20);
-		setImageOffset(imageOffset + 20);
-		// console.log(offset);
+		setPageId(pageId + 20);
 	};
 
 	const previous = () => {
@@ -30,8 +31,7 @@ export default function ListePokemons() {
 		};
 		setUrl(newUrl);
 		setOffset(offset - 20);
-		setImageOffset(imageOffset - 20);
-		// console.log(offset);
+		setPageId(pageId - 20);
 	};
 
 	useEffect(() => {
@@ -44,23 +44,35 @@ export default function ListePokemons() {
 					next: data.next,
 					previous: data.previous,
 				});
+				fetch("https://pokeapi.co/api/v2/pokemon/" + id + "")
+					.then(res => res.json())
+					.then(data => {
+						setType(
+							data.types.map(type => type.type.name).join(", ")
+						);
+						setId(id + 1);
+						console.log(data.types);
+					})
+					.catch(err => console.error(err));
 				console.log(data);
+				console.log(id);
 			})
 			.catch(err => console.error(err));
+
 		// eslint-disable-next-line
 	}, [url.current]);
-	// useEffect(i => {
-	// 	while (i <= offset) {
-	// 		fetch("https://pokeapi.co/api/v2/pokemon/")
-	// 			.then(res => res.json())
-	// 			.then(data => {
-	// 				setImage(data.sprites.front_default);
-	// 			})
-	// 			.catch(err => console.log(err));
-	// 		i++;
-	// 	}
-	// 	console.log(offset);
-	// });
+
+	// useEffect(() => {
+	// 	fetch("https://pokeapi.co/api/v2/pokemon/" + id + "")
+	// 		.then(res => res.json())
+	// 		.then(data => {
+	// 			setType(data.types.map(type => type.type.name).join(", "));
+	// 			console.log(data.types);
+	// 		})
+	// 		.catch(err => console.error(err));
+	// 	// eslint-disable-next-line
+	// }, ["https://pokeapi.co/api/v2/pokemon/" + id + ""]);
+	// console.log(type);
 
 	return (
 		<div>
@@ -69,21 +81,22 @@ export default function ListePokemons() {
 				{pokemons.map((pokemon, i) => (
 					<li key={i}>
 						{pokemon.name}
-						{imageOffset + i}
+						{pageId + i}
+						{type}
 						<img
 							src={
 								"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
-								(imageOffset + i) +
+								(pageId + i) +
 								".png"
 							}
 							alt=""
 						/>
+						<button>Add</button>
 					</li>
 				))}
 			</ul>
 			{url.previous && <button onClick={previous}>Previous</button>}
 			{url.next && <button onClick={next}>Next</button>}
-			{/* <img src={image} alt="" /> */}
 		</div>
 	);
 }
