@@ -58,21 +58,7 @@ export default function ListePokemons() {
 				console.log(id);
 			})
 			.catch(err => console.error(err));
-
-		// eslint-disable-next-line
 	}, [url.current]);
-
-	// useEffect(() => {
-	// 	fetch("https://pokeapi.co/api/v2/pokemon/" + id + "")
-	// 		.then(res => res.json())
-	// 		.then(data => {
-	// 			setType(data.types.map(type => type.type.name).join(", "));
-	// 			console.log(data.types);
-	// 		})
-	// 		.catch(err => console.error(err));
-	// 	// eslint-disable-next-line
-	// }, ["https://pokeapi.co/api/v2/pokemon/" + id + ""]);
-	// console.log(type);
 
 	return (
 		<div>
