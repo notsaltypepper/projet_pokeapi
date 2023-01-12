@@ -55,7 +55,11 @@ export default function ListePokemonsTest() {
                                 ...type,
                                 ...data.types.map((type) => type.type.name),
                             ])
-                            type.push(data.types.map((type) => type.type.name))
+                            type.push(
+                                data.types
+                                    .map((type) => type.type.name)
+                                    .join(", ")
+                            )
                         })
                         .catch((err) => console.error(err))
                 })
@@ -69,9 +73,6 @@ export default function ListePokemonsTest() {
             <ul>
                 {pokemonUrl.map((pokemon, i) => (
                     <li key={i}>
-                        {pokemon.name}
-                        {pageId + i}
-                        {type[i]}
                         <img
                             src={
                                 "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
@@ -80,6 +81,13 @@ export default function ListePokemonsTest() {
                             }
                             alt=""
                         />
+                        <br />
+                        Name: {pokemon.name}
+                        <br />
+                        Id: {pageId + i}
+                        <br />
+                        Type(s): {type[i]}
+                        <br />
                         <button>Add</button>
                     </li>
                 ))}
