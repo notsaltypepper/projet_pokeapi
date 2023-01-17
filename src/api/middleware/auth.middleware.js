@@ -16,7 +16,7 @@ const isAuthenticated = async (req, res, next) => {
 
         const password = await User.findOne({ password: password })
         if (!password) {
-            res.status(401).send("Password not found")
+            res.status(401).send("Incorrect password")
         }
 
         req.user = user

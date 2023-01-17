@@ -1,4 +1,5 @@
 import { useState } from "react"
+import axios from "axios"
 
 export default function SignIn() {
     const [username, setUsername] = useState("")
@@ -15,6 +16,18 @@ export default function SignIn() {
         setPassword(event.target.value)
     }
 
+    const handleClick = () => {
+        setUserData({ username, password })
+        axios({
+            method: "POST",
+            url: "http://localhost:3030/signin",
+            data: {
+                username: username,
+                password: password,
+            },
+        })
+    }
+
     console.log(username)
     console.log(password)
     console.log(userData)
@@ -27,7 +40,7 @@ export default function SignIn() {
             <br />
             <input placeholder="Password" onChange={handlePassChange} />
             <br />
-            <button onClick={setUserData}>Sign In</button>
+            <button onClick={handleClick}>Sign In</button>
         </div>
     )
 }

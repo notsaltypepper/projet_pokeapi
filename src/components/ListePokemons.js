@@ -41,12 +41,14 @@ export default function ListePokemonsTest() {
             .then((res) => res.json())
             .then((data) => {
                 setPokemonUrl(data.results)
+                console.log(data.results)
                 setUrl({
                     current: url.current,
                     next: data.next,
                     previous: data.previous,
                 })
                 pokemonUrl.push(...data.results.map((url) => url.url))
+                console.log(pokemonUrl)
                 pokemonUrl.forEach((url) => {
                     fetch(url)
                         .then((res) => res.json())
@@ -62,6 +64,7 @@ export default function ListePokemonsTest() {
                             )
                         })
                         .catch((err) => console.error(err))
+                    console.log(type)
                 })
             })
             .catch((err) => console.error(err))
